@@ -16,17 +16,18 @@ class Order
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    #[Groups(['order:read'])]
+    #[Groups(['order:write', 'order:read'])]
     private ?int $id = null;
 
     /**
      * @var Collection<int, OrderItem>
      */
     #[ORM\OneToMany(targetEntity: OrderItem::class, mappedBy: 'order', cascade: ['persist'])]
-    #[Groups(['order:read'])]
+    #[Groups(['order:write', 'order:read'])]
     private Collection $items;
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]
+    #[Groups(['order:write', 'order:read'])]
     private ?\DateTimeInterface $createdAt = null;
     
 

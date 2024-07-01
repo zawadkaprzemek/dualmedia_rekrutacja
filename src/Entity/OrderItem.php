@@ -20,11 +20,11 @@ class OrderItem
 
     #[ORM\ManyToOne(inversedBy: 'orderItems')]
     #[ORM\JoinColumn(nullable: false)]
-    #[Groups(['order:read'])]
+    #[Groups(['order:write', 'order:read'])]
     private ?Product $product = null;
 
     #[ORM\Column]
-    #[Groups(['order:read'])]
+    #[Groups(['order:write', 'order:read'])]
     private ?int $quantity = null;
 
     public function getId(): ?int

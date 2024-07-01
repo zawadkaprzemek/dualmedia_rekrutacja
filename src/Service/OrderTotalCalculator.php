@@ -10,7 +10,7 @@ class OrderTotalCalculator implements CalculatorServiceInterface
     {
         $total = 0;
         foreach ($order->getItems() as $item) {
-            $total += $item->getProduct()->getPrice() * $item->getQuantity();
+            $total += round($item->getProduct()->getPrice() * $item->getQuantity(),2);
         }
         return ['total' => $total];
     }

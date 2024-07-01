@@ -28,21 +28,27 @@ class OrderController extends AbstractController
     {
         $data = json_decode($request->getContent(), true);
         $order = new Order();
+        try {
+            foreach ($data['items'] as $item) {
+                $product = $this->em->getRepository(Product::class)->find($item['product_id']);
+                $orderItem = new OrderItem();
+                $orderItem->setProduct($product);
+                $orderItem->setQuantity($item['quantity']);
+                $order->addItem($orderItem);
+            }
 
-        foreach ($data['items'] as $item) {
-            $product = $this->em->getRepository(Product::class)->find($item['product_id']);
-            $orderItem = new OrderItem();
-            $orderItem->setProduct($product);
-            $orderItem->setQuantity($item['quantity']);
-            $order->addItem($orderItem);
+            $this->em->persist($order);
+            $this->em->flush();
+        }catch (\Exception)
+        {
+            return $this->json([
+               'error' => 'Nieznaleziono produktu, pod adresem /product/list jest lista dostepnych produktów',
+            ],
+            Response::HTTP_BAD_REQUEST);
         }
-
-        $this->em->persist($order);
-        $this->em->flush();
-
         $orderData = $this->calculator->calculate($order);
 
-        return $this->json(['order' => $order, 'calculation' => $orderData], Response::HTTP_OK, [], ['groups' => 'order:read']);
+        return $this->json(['order' => $order, 'calculation' => $orderData], Response::HTTP_OK, [], ['groups' => 'order:write']);
     }
 
     #[Route('/{id}', name: 'get_order', methods: ['GET'])]

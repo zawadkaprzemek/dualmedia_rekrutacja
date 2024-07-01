@@ -17,15 +17,15 @@ class Product
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    #[Groups(['order:read', 'product:read'])]
+    #[Groups(['order:write', 'order:read', 'product:read'])]
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
-    #[Groups(['order:read', 'product:read'])]
+    #[Groups(['order:write', 'order:read', 'product:read'])]
     private ?string $name = null;
 
     #[ORM\Column(type: Types::DECIMAL, precision: 10, scale: 2)]
-    #[Groups(['order:read', 'product:read'])]
+    #[Groups(['order:write', 'order:read', 'product:read'])]
     private ?string $price = null;
 
     /**
